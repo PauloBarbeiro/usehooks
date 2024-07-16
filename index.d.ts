@@ -1,4 +1,5 @@
 import * as React from "react";
+import { ReadonlySignal } from "@preact/signals-react";
 
 export type BatteryManager = {
   supported: boolean;
@@ -84,6 +85,13 @@ export type CustomQueue<T> = {
   size: number;
   queue: T[];
 };
+
+export type CustomQueueSignal<T> = {
+  first: ReadonlySignal<T | undefined>;
+  last: ReadonlySignal<T | undefined>;
+  size: ReadonlySignal<number>;
+  queue: ReadonlySignal<T[]>;
+} & CustomQueue<T>;
 
 export type RenderInfo = {
   name: string;
@@ -260,4 +268,105 @@ declare module "@uidotdev/usehooks" {
     width: number | null;
     height: number | null;
   };
+}
+
+declare module "@uidotdev/usehooks/signals" {
+  export function useBattery(): ReadonlySignal<BatteryManager>;
+
+  export function useCopyToClipboard(): ReadonlySignal<[
+        string | null,
+    (value: string) => Promise<void>
+  ]>;
+
+  export function useCounter(
+      startingValue?: number,
+      options?: {
+        min?: number;
+        max?: number;
+      }
+  ): [
+    ReadonlySignal<number>,
+    {
+      increment: () => void;
+      decrement: () => void;
+      set: (nextCount: number) => void;
+      reset: () => void;
+    }
+  ];
+
+  export function useDebounce<T>(value: T, delay: number): ReadonlySignal<T>;
+
+  export function useDefault<T>(
+      initialValue: T,
+      defaultValue: T
+  ): [ReadonlySignal<T>, (value: T) => void];
+
+  export function useGeolocation(options?: PositionOptions): ReadonlySignal<GeolocationState>;
+
+  // export function useHistoryState<T>(initialPresent?: T): HistoryState<T>;
+
+  export function useHover<T extends Element>(): [
+    React.RefCallback<T>,
+    ReadonlySignal<boolean>
+  ];
+
+  export function useIdle(ms?: number): ReadonlySignal<boolean>;
+
+  export function useIntersectionObserver<T extends Element>(
+      options?: IntersectionObserverInit
+  ): [React.RefCallback<T>, ReadonlySignal<IntersectionObserverEntry | null>];
+
+  export function useIsClient(): ReadonlySignal<boolean>;
+
+  export function useList<T>(defaultList?: T[]): [ReadonlySignal<T[]>, CustomList<T>];
+
+  export function useMeasure<T extends Element>(): [
+    React.RefCallback<T>,
+    ReadonlySignal<{
+      width: number | null;
+      height: number | null;
+    }>
+  ];
+
+  export function useMouse<T extends Element>(): [
+    ReadonlySignal<MousePosition>,
+    React.MutableRefObject<T>
+  ];
+
+  export function useOrientation(): ReadonlySignal<{
+    angle: number;
+    type: string;
+  }>;
+
+  export function usePrevious<T>(newValue: T): ReadonlySignal<T>;
+
+  export function useQueue<T>(initialValue?: T[]): CustomQueueSignal<T>;
+
+  export function useScript(
+      src: string,
+      options?: {
+        removeOnUnmount?: boolean;
+      }
+  ): ReadonlySignal<"unknown" | "loading" | "ready" | "error">;
+
+  export function useSet<T>(values?: T[]): Set<T>;
+
+  export function useThrottle<T>(value: T, delay: number): ReadonlySignal<T>;
+
+  export function useToggle(
+      initialValue?: boolean
+  ): [ReadonlySignal<boolean>, (newValue?: boolean) => void];
+
+  export function useWindowScroll(): [
+    ReadonlySignal<{
+      x: number | null;
+      y: number | null;
+    }>,
+    (args: unknown) => void
+  ];
+
+  export function useWindowSize(): ReadonlySignal<{
+    width: number | null;
+    height: number | null;
+  }>;
 }

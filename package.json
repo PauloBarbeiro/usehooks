@@ -11,7 +11,8 @@
     "typescript": "^5.1.6"
   },
   "exports": {
-    "default": "./index.js"
+    "default": "./index.js",
+    "signals": "./signals.js"
   },
   "engines": {
     "node": ">=16"
@@ -22,6 +23,7 @@
   ],
   "types": "index.d.ts",
   "peerDependencies": {
+    "@preact/signals-react": "^2.1.0",
     "react": ">=18.0.0",
     "react-dom": ">=18.0.0"
   },
